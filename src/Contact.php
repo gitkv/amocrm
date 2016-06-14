@@ -2,43 +2,80 @@
 
 namespace AmoCRM;
 
-class Contact extends Entity
-{
-	public $name;
-	public $company_name;
-	public $responsible_user_id;
-	public $tags;
-	public $linked_leads_id;
-	public $custom_fields;
+/**
+ * Контакт
+ * Одна из основных сущностей системы. Состоит из предустановленного набора полей и дополнительных, создаваемых
+ * администратором аккаунта. Каждый контакт может участвовать в одной и более сделке или может быть вообще не связан
+ * ни с одной. Каждый контакт может быть прикреплен к одной компании.
+ * E-mail контакта и телефон используются как уникальные идентификаторы в связке с другими системами.
+ * К примеру, именно в события контакта попадает информация о совершенных звонках, о e-mail-переписке.
+ * Каждому контакту может быть задан ответственный для разграничения прав доступа между сотрудниками аккаунта.
+ *
+ * Class Contact
+ * @package AmoCRM
+ */
+class Contact extends Entity {
 
-	private $tags_array;
-
-	public function __construct()
-	{
-		$this->object_name = 'contacts';
-        $this->url_method_name = 'v2/json/private/api/contacts';
-		$this->linked_leads_id = [];
-		$this->custom_fields = [];
-		$this->tags_array = [];
+    /**
+     * Contact constructor.
+     */
+	public function __construct(){
+        $this->method = ''; //метод запроса
+        $this->url = ''; //url запроса
+        $this->type = ''; //тип запроса
+        $this->name = 'contacts'; //имя объекта запроса
+        $this->data = []; //данные запроса
 	}
+
+    /**
+     * Метод позволяет добавлять контакты по одному или пакетно, а также обновлять данные по уже существующим контактам.
+     */
+    public function set(){
+        $this->method = 'POST';
+        $this->url = '/private/api/v2/json/contacts/set';
+        $this->type = 'add';
+    }
+
+    /**
+     * 	Метод для получения списка контактов с возможностью фильтрации и постраничной выборки.
+     */
+    public function getList(){
+        $this->method = 'GET';
+        $this->url = '/private/api/v2/json/contacts/list';
+        $this->type = 'list';
+    }
+
+    /**
+     * Метод для получения списка связей между сделками и контактами.
+     */
+    public function getLinks(){
+        $this->method = 'GET';
+        $this->url = '/private/api/v2/json/contacts/links';
+        $this->type = 'links';
+    }
+
+
+    /**
+     * Установка параметров запроса
+     */
 
 	public function setName($value)
 	{
-		$this->name = $value;
+		$this->data['name'] = $value;
 
 		return $this;
 	}
 
 	public function setCompanyName($value)
 	{
-		$this->company_name = $value;
+		$this->data['company_name'] = $value;
 
 		return $this;
 	}
 
 	public function setResponsibleUserId($value)
 	{
-		$this->responsible_user_id = $value;
+		$this->data['responsible_user_id'] = $value;
 
 		return $this;
 	}
@@ -49,7 +86,7 @@ class Contact extends Entity
 			$value = [$value];
 		}
 
-		$this->linked_leads_id = array_merge($this->linked_leads_id, $value);
+		$this->data['linked_leads_id'] = array_merge($this->linked_leads_id, $value);
 
 		return $this;
 	}
@@ -61,7 +98,7 @@ class Contact extends Entity
 		}
 
 		$this->tags_array = array_merge($this->tags_array, $value);
-		$this->tags = implode(',', $this->tags_array);
+		$this->data['tags'] = implode(',', $this->tags_array);
 
 		return $this;
 	}
@@ -82,7 +119,7 @@ class Contact extends Entity
 
 		$field['values'][] = $field_value;
 
-		$this->custom_fields[] = $field;
+		$this->data['custom_fields'][] = $field;
 
 		return $this;
 	}

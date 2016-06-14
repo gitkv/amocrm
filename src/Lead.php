@@ -15,7 +15,7 @@ class Lead extends Entity
 
     public function __construct()
     {
-        $this->object_name = 'leads';
+        $this->name = 'leads';
         $this->url_method_name = 'v2/json/private/api/contacts';
         $this->custom_fields = [];
         $this->tags_array = [];

@@ -14,7 +14,7 @@ class Company extends Entity
 
 	public function __construct()
 	{
-		$this->object_name = 'contacts';
+		$this->name = 'contacts';
 		$this->url_method_name = 'v2/json/private/api/contacts';
 		$this->linked_leads_id = [];
 		$this->custom_fields = [];

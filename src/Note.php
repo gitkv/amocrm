@@ -29,7 +29,7 @@ class Note extends Entity
 
     public function __construct()
     {
-        $this->object_name = 'notes';
+        $this->name = 'notes';
         $this->url_method_name = $this->key_name;
     }
 

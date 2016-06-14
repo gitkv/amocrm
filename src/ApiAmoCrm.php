@@ -2,13 +2,13 @@
 
 namespace AmoCRM;
 
-class Handler
+class ApiAmoCrm
 {
     private $domain;
     private $debug;
     private $errors;
 
-    public $user;
+    public $login;
     public $key;
     public $config;
     public $result;
@@ -55,20 +55,24 @@ class Handler
         }
         
         $this->domain = $this->config['Domain'];
-        $this->user = $this->config['Login'];
+        $this->login = $this->config['Login'];
         $this->key = $this->config['Key'];
 
 
-        $this->request(new Request(Request::AUTH, $this));
+        $auth = new Auth();
+        $auth->login($this->login, $this->key, $this);
+
+
+        //$this->request(new Request('AUTH', $this));
     }
 
     public function request(Request $request)
     {
-        $url = 'https://' . $this->domain . '.amocrm.ru/' . $request->url;
+        $url = 'https://' . $this->domain . '.amocrm.ru' . $request->url;
 
-        print '<br><h4>'.$url.'</h4><br>';
-        print '<pre>';
-        print_r($request);
+//        print '<pre>';
+//        print_r($request);
+//        die();
 
         $headers = ['Content-Type: application/json'];
         if ($date = $request->getIfModifiedSince()) {
@@ -85,7 +89,7 @@ class Handler
         curl_setopt($ch, CURLOPT_COOKIEFILE, __DIR__ . '/../config/cookie.txt');
         curl_setopt($ch, CURLOPT_COOKIEJAR, __DIR__ . '/../config/cookie.txt');
 
-        if ($request->post) {
+        if ($request->method == 'POST') {
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($request->params));
         }
@@ -105,10 +109,14 @@ class Handler
         if (floor($info['http_code'] / 100) >= 3) {
             if (!$this->debug) {
                 $message = $this->result->response->error;
-            } else {
+            }
+            else {
                 $error = (isset($this->result->response->error)) ? $this->result->response->error : '';
+
                 $error_code = (isset($this->result->response->error_code)) ? $this->result->response->error_code : '';
+
                 $description = ($error && $error_code && isset($this->errors->{$error_code})) ? $this->errors->{$error_code} : '';
+
                 $response = (isset($this->result->response->error)) ? $this->result->response->error : '';
 
                 $message = json_encode([
@@ -122,7 +130,7 @@ class Handler
         }
 
         $this->result = isset($this->result->response) ? $this->result->response : false;
-        $this->last_insert_id = ($request->post && isset($this->result->{$request->type}->{$request->action}[0]->id))
+        $this->last_insert_id = ($request->method == 'POST' && isset($this->result->{$request->type}->{$request->action}[0]->id))
             ? $this->result->{$request->type}->{$request->action}[0]->id
             : false;
 

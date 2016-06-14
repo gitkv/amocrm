@@ -20,7 +20,7 @@ class Task extends Entity
 
     public function __construct()
     {
-        $this->object_name = 'tasks';
+        $this->name = 'tasks';
         $this->url_method_name = $this->key_name;
     }
 

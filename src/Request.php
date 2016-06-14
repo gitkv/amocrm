@@ -2,39 +2,40 @@
 
 namespace AmoCRM;
 
+/**
+ * Class Request
+ * @package AmoCRM
+ */
 class Request
 {
-    const AUTH = 1;
-    const INFO = 2;
-    const GET = 3;
-    const SET = 4;
 
-    public $post;
+    public $method;
     public $url;
     public $type;
+    public $name;
     public $action;
     public $params;
 
     private $if_modified_since;
     private $object;
 
-    public function __construct($request_type = null, $params = null, $object = null)
-    {
-        $this->post = false;
-        $this->params = $params;
-        $this->object = $object;
-
-        switch ($request_type) {
-            case Request::AUTH:
-                $this->createAuthRequest();
-                break;
-            case Request::INFO:
-                $this->createInfoRequest();
-                break;
-            case Request::GET:
+    /**
+     * Request constructor.
+     * @param null $object
+     */
+    public function __construct($object = null) {
+        $this->method = $object->method;
+        $this->url = $object->url;
+        $this->type = $object->type;
+        $this->name = $object->name;
+        $this->id = $object->id;
+        $this->object = $object->data;
+        
+        switch ($object->method) {
+            case 'GET':
                 $this->createGetRequest();
                 break;
-            case Request::SET:
+            case 'POST':
                 $this->createPostRequest();
                 break;
         }
@@ -50,46 +51,36 @@ class Request
         return empty($this->if_modified_since) ? false : $this->if_modified_since;
     }
 
-    private function createAuthRequest()
-    {
-        $this->post = true;
-        $this->url = 'v2/json/private/api/auth.php?type=json';
-
-        $this->params = [
-            'USER_LOGIN' => $this->params->user,
-            'USER_HASH' => $this->params->key
-        ];
-    }
-
     private function createInfoRequest()
     {
         $this->url = 'v2/json/accounts/current';
     }
 
-    private function createGetRequest()
-    {
+    private function createGetRequest() {
         $this->url = 'v2/json/' . $this->object[0] . '/' . $this->object[1];
         $this->url .= (count($this->params) ? '?' . http_build_query($this->params) : '');
     }
 
-    private function createPostRequest()
-    {
-        if (!is_array($this->params)) {
-            $this->params = [$this->params];
+    private function createPostRequest() {
+        if($this->type == 'auth'){
+            $this->params = $this->object;
         }
+        else {
+            if (!is_array($this->object)) {
+                $this->object = [$this->object];
+            }
 
-        $object_name = $this->params[0]->object_name;
-        $url_method_name = $this->params[0]->url_method_name;
-        $id = $this->params[0]->id;
+            $object_name = $this->name;
+            $url_method_name = $this->url;
+            $id = $this->id;
 
-        $action = (isset($id)) ? 'update' : 'add';
-        $params = [];
-        $params['request'][$object_name][$action] = $this->params;
+            $action = (isset($id)) ? 'update' : 'add';
+            $params = [];
+            $params['request'][$object_name][$action] = $this->object;
 
-        $this->post = true;
-        $this->type = $object_name;
-        $this->action = $action;
-        $this->url = $url_method_name;
-        $this->params = $params;
+            $this->action = $action;
+            $this->url = $url_method_name;
+            $this->params = $params;
+        }
     }
 }

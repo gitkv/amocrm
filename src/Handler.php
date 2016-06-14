@@ -14,35 +14,22 @@ class Handler
     public $result;
     public $last_insert_id;
 
-    public function __construct($domain = null, $user = null, $debug = false)
+    public function __construct($debug = false)
     {
-        $this->domain = $domain;
-        $this->user = $user;
         $this->debug = $debug;
 
         $config_dir = __DIR__ . '/../config/';
-
-        $file_key = $config_dir . $this->domain . '@' . $this->user . '.key';
-        $file_config = $config_dir . 'config@' . $this->domain . '.php';
+        $file_config = $config_dir . 'config.php';
 
         if (!is_readable($config_dir) || !is_writable($config_dir)) {
             throw new \Exception('Директория "config" должна быть доступна для чтения и записи');
-        }
-
-        if (!file_exists($file_key)) {
-            throw new \Exception('Отсутсвует файл с ключом');
         }
 
         if (!file_exists($file_config)) {
             throw new \Exception('Отсутсвует файл с конфигурацией');
         }
 
-        $key = trim(file_get_contents($file_key));
         $config = trim(file_get_contents($file_config));
-
-        if (empty($key)) {
-            throw new \Exception('Файл с ключом пуст');
-        }
 
         if (empty($config)) {
             throw new \Exception('Файл с конфигурацией пуст');
@@ -51,9 +38,26 @@ class Handler
         if ($this->debug) {
             $this->errors = @json_decode(trim(file_get_contents($config_dir . 'errors.json')));
         }
-
-        $this->key = $key;
+        
         $this->config = include $file_config;
+
+
+        if (empty($this->config['Domain'])) {
+            throw new \Exception('Не указан домен');
+        }
+
+        if (empty($this->config['Login'])) {
+            throw new \Exception('Не указан логин');
+        }
+        
+        if (empty($this->config['Key'])) {
+            throw new \Exception('Не указан ключ');
+        }
+        
+        $this->domain = $this->config['Domain'];
+        $this->user = $this->config['Login'];
+        $this->key = $this->config['Key'];
+
 
         $this->request(new Request(Request::AUTH, $this));
     }

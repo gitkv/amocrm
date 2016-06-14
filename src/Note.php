@@ -29,8 +29,8 @@ class Note extends Entity
 
     public function __construct()
     {
-        $this->key_name = 'notes';
-        $this->url_name = $this->key_name;
+        $this->object_name = 'notes';
+        $this->url_method_name = $this->key_name;
     }
 
     public function setElementId($value)

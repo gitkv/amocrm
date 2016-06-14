@@ -20,8 +20,8 @@ class Task extends Entity
 
     public function __construct()
     {
-        $this->key_name = 'tasks';
-        $this->url_name = $this->key_name;
+        $this->object_name = 'tasks';
+        $this->url_method_name = $this->key_name;
     }
 
     public function setElementId($value)

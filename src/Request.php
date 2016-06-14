@@ -53,7 +53,7 @@ class Request
     private function createAuthRequest()
     {
         $this->post = true;
-        $this->url = 'auth.php?type=json';
+        $this->url = 'v2/json/private/api/auth.php?type=json';
 
         $this->params = [
             'USER_LOGIN' => $this->params->user,
@@ -78,18 +78,18 @@ class Request
             $this->params = [$this->params];
         }
 
-        $key_name = $this->params[0]->key_name;
-        $url_name = $this->params[0]->url_name;
+        $object_name = $this->params[0]->object_name;
+        $url_method_name = $this->params[0]->url_method_name;
         $id = $this->params[0]->id;
 
         $action = (isset($id)) ? 'update' : 'add';
         $params = [];
-        $params['request'][$key_name][$action] = $this->params;
+        $params['request'][$object_name][$action] = $this->params;
 
         $this->post = true;
-        $this->type = $key_name;
+        $this->type = $object_name;
         $this->action = $action;
-        $this->url = 'v2/json/' . $url_name . '/set';
+        $this->url = $url_method_name;
         $this->params = $params;
     }
 }

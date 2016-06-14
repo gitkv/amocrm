@@ -15,8 +15,8 @@ class Contact extends Entity
 
 	public function __construct()
 	{
-		$this->key_name = 'contacts';
-		$this->url_name = $this->key_name;
+		$this->object_name = 'contacts';
+        $this->url_method_name = 'v2/json/private/api/contacts';
 		$this->linked_leads_id = [];
 		$this->custom_fields = [];
 		$this->tags_array = [];

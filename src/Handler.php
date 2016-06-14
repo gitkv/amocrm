@@ -64,13 +64,19 @@ class Handler
 
     public function request(Request $request)
     {
+        $url = 'https://' . $this->domain . '.amocrm.ru/' . $request->url;
+
+        print '<br><h4>'.$url.'</h4><br>';
+        print '<pre>';
+        print_r($request);
+
         $headers = ['Content-Type: application/json'];
         if ($date = $request->getIfModifiedSince()) {
             $headers[] = 'IF-MODIFIED-SINCE: ' . $date;
         }
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://' . $this->domain . '.amocrm.ru/private/api/' . $request->url);
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_USERAGENT, 'amoCRM-API-client/1.0');
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

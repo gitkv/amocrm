@@ -15,6 +15,11 @@ namespace AmoCRM;
  */
 class Company extends Entity
 {
+    private $tags_array;
+
+    /**
+     * Company constructor.
+     */
 	public function __construct()
 	{
         $this->method = ''; //метод запроса
@@ -22,6 +27,7 @@ class Company extends Entity
         $this->type = ''; //тип запроса
         $this->name = 'contacts'; //имя объекта запроса
         $this->data = []; //данные запроса
+        $this->tags_array = []; //теги
 	}
 
     /**
@@ -41,6 +47,11 @@ class Company extends Entity
         $this->url = '/private/api/v2/json/company/list';
         $this->type = 'list';
     }
+
+
+    /**
+     * Установка параметров запроса
+     */
 
 	public function setName($value)
 	{
@@ -67,16 +78,17 @@ class Company extends Entity
 		return $this;
 	}
 
-	public function setTags($value)
-	{
-		if (!is_array($value)) {
-			$value = [$value];
-		}
+    public function setTags($value)
+    {
+        if (!is_array($value)) {
+            $value = [$value];
+        }
 
-		$this->data['tags'] = implode(',', $this->tags_array);
+        $this->tags_array = array_merge($this->tags_array, $value);
+        $this->data['tags'] = implode(',', $this->tags_array);
 
-		return $this;
-	}
+        return $this;
+    }
 
     public function setCustomField($id, $value, $enum = false)
     {

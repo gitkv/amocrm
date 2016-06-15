@@ -14,7 +14,9 @@ namespace AmoCRM;
  * Class Contact
  * @package AmoCRM
  */
-class Contact extends Entity {
+class Contact extends Entity
+{
+    private $tags_array;
 
     /**
      * Contact constructor.
@@ -25,6 +27,7 @@ class Contact extends Entity {
         $this->type = ''; //тип запроса
         $this->name = 'contacts'; //имя объекта запроса
         $this->data = []; //данные запроса
+        $this->tags_array = []; //теги
 	}
 
     /**
@@ -91,17 +94,17 @@ class Contact extends Entity {
 		return $this;
 	}
 
-	public function setTags($value)
-	{
-		if (!is_array($value)) {
-			$value = [$value];
-		}
+    public function setTags($value)
+    {
+        if (!is_array($value)) {
+            $value = [$value];
+        }
 
-		$this->tags_array = array_merge($this->tags_array, $value);
-		$this->data['tags'] = implode(',', $this->tags_array);
+        $this->tags_array = array_merge($this->tags_array, $value);
+        $this->data['tags'] = implode(',', $this->tags_array);
 
-		return $this;
-	}
+        return $this;
+    }
 
 	public function setCustomField($id, $value, $enum = false)
 	{

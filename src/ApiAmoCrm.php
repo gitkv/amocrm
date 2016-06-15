@@ -82,10 +82,11 @@ class ApiAmoCrm
      */
     public function request(Request $request)
     {
-        $url = 'https://' . $this->domain . '.amocrm.ru' . $request->url;
+        $url = 'https://'.$this->domain.'.amocrm.ru'.$request->url;
 
+        print $url;
         print '<pre>';
-        print_r($request);
+        print_r($request->params);
 //        die();
 
         $headers = ['Content-Type: application/json'];
@@ -144,9 +145,11 @@ class ApiAmoCrm
         }
 
         $this->result = isset($this->result->response) ? $this->result->response : false;
-        $this->last_insert_id = ($request->method == 'POST' && isset($this->result->{$request->type}->{$request->action}[0]->id))
-            ? $this->result->{$request->type}->{$request->action}[0]->id
-            : false;
+        $this->last_insert_id =
+            ($request->method == 'POST' && isset($this->result->{$request->type}->{$request->action}[0]->id))?
+            $this->result->{$request->type}->{$request->action}[0]->id
+            :
+            false;
 
         return $this;
     }

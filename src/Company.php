@@ -2,35 +2,56 @@
 
 namespace AmoCRM;
 
+/**
+ * Компания
+ * Полностью аналогична сущности "контакт". Состоит из предустановленного набора полей и дополнительных, создаваемых
+ * администратором аккаунта. Каждая компания может участвовать в одной и более сделке или может быть вообще не
+ * связана ни с одной.
+ * E-mail и телефон используются как идентификаторы в связке с другими системами
+ * Каждой компании может быть задан ответственный для разграничения прав доступа между сотрудниками аккаунта.
+ *
+ * Class Company
+ * @package AmoCRM
+ */
 class Company extends Entity
 {
-	public $name;
-	public $responsible_user_id;
-	public $tags;
-	public $linked_leads_id;
-	public $custom_fields;
-
-	private $tags_array;
-
 	public function __construct()
 	{
-		$this->name = 'contacts';
-		$this->url_method_name = 'v2/json/private/api/contacts';
-		$this->linked_leads_id = [];
-		$this->custom_fields = [];
-		$this->tags_array = [];
+        $this->method = ''; //метод запроса
+        $this->url = ''; //url запроса
+        $this->type = ''; //тип запроса
+        $this->name = 'contacts'; //имя объекта запроса
+        $this->data = []; //данные запроса
 	}
+
+    /**
+     * Метод позволяет добавлять компании по одной или пакетно, а также обновлять данные по уже существующим компаниям.
+     */
+    public function set(){
+        $this->method = 'POST';
+        $this->url = '/private/api/v2/json/company/set';
+        $this->type = 'add';
+    }
+
+    /**
+     * 	Метод для получения списка контактов с возможностью фильтрации и постраничной выборки.
+     */
+    public function getList(){
+        $this->method = 'GET';
+        $this->url = '/private/api/v2/json/company/list';
+        $this->type = 'list';
+    }
 
 	public function setName($value)
 	{
-		$this->name = $value;
+		$this->data['name'] = $value;
 
 		return $this;
 	}
 
 	public function setResponsibleUserId($value)
 	{
-		$this->responsible_user_id = $value;
+		$this->data['responsible_user_id'] = $value;
 
 		return $this;
 	}
@@ -41,7 +62,7 @@ class Company extends Entity
 			$value = [$value];
 		}
 
-		$this->linked_leads_id = array_merge($this->linked_leads_id, $value);
+		$this->data['linked_leads_id'] = array_merge($this->linked_leads_id, $value);
 
 		return $this;
 	}
@@ -52,30 +73,55 @@ class Company extends Entity
 			$value = [$value];
 		}
 
-		$this->tags_array = array_merge($this->tags_array, $value);
-		$this->tags = implode(',', $this->tags_array);
+		$this->data['tags'] = implode(',', $this->tags_array);
 
 		return $this;
 	}
 
-	public function setCustomField($name, $value, $enum = false)
+    public function setCustomField($name, $value, $enum = false)
+    {
+        $field = [
+            'id' => $name,
+            'values' => []
+        ];
+
+        $field_value = [];
+        $field_value['value'] = $value;
+
+        if ($enum) {
+            $field_value['enum'] = $enum;
+        }
+
+        $field['values'][] = $field_value;
+
+        $this->data['custom_fields'][] = $field;
+
+        return $this;
+    }
+
+	/*public function setCustomField($id, $value, $enum = false)
 	{
 		$field = [
-			'id' => $name,
-			'values' => []
+			'id' => $id,
+			'values' => $value
 		];
 
-		$field_value = [];
-		$field_value['value'] = $value;
-
-		if ($enum) {
-			$field_value['enum'] = $enum;
-		}
-
-		$field['values'][] = $field_value;
-
-		$this->custom_fields[] = $field;
+		$this->data['custom_fields'][] = $field;
 
 		return $this;
-	}
+
+
+
+
+        $a = [
+            "values"=>  [
+                     {
+                         "id"=>  "13023407",
+                        "value":  "info@magicweb.com",
+                        "enum":  "WORK",
+                        "last_modified":  1364369762
+                     }
+                  ]
+        ];
+	}*/
 }

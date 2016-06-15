@@ -60,8 +60,7 @@ class Request
      * генератор GET запроса
      */
     private function createGetRequest() {
-        $this->url = 'v2/json/' . $this->object[0] . '/' . $this->object[1];
-        $this->url .= (count($this->params) ? '?' . http_build_query($this->params) : '');
+        $this->url .= (count($this->object) ? '?' . http_build_query($this->object) : '');
     }
 
     /**
@@ -82,7 +81,7 @@ class Request
 
             $action = (isset($id)) ? 'update' : 'add';
             $params = [];
-            $params['request'][$object_name][$action] = $this->object;
+            $params['request'][$object_name][$action][] = $this->object;
 
             $this->action = $action;
             $this->url = $url_method_name;

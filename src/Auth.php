@@ -26,9 +26,13 @@ class Auth extends Entity
     }
 
     /**
-     * 	Производит авторизацию пользователя в системе.
+     * Производит авторизацию пользователя в системе.
+     * @param null $login
+     * @param null $key
+     * @param null $api object
+     * @return mixed
      */
-    public function login($login=null, $key=null, $api){
+    public function login($login=null, $key=null, $api=null){
         $this->data['USER_LOGIN'] = $login;
         $this->data['USER_HASH'] = $key;
         return $api->request(new Request($this));

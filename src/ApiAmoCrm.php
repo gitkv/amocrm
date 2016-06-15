@@ -2,6 +2,10 @@
 
 namespace AmoCRM;
 
+/**
+ * Class ApiAmoCrm
+ * @package AmoCRM
+ */
 class ApiAmoCrm
 {
     private $domain;
@@ -14,6 +18,11 @@ class ApiAmoCrm
     public $result;
     public $last_insert_id;
 
+    /**
+     * ApiAmoCrm constructor.
+     * @param bool $debug
+     * @throws \Exception
+     */
     public function __construct($debug = false)
     {
         $this->debug = $debug;
@@ -66,12 +75,17 @@ class ApiAmoCrm
         //$this->request(new Request('AUTH', $this));
     }
 
+    /**
+     * @param Request $request
+     * @return $this
+     * @throws \Exception
+     */
     public function request(Request $request)
     {
         $url = 'https://' . $this->domain . '.amocrm.ru' . $request->url;
 
-//        print '<pre>';
-//        print_r($request);
+        print '<pre>';
+        print_r($request);
 //        die();
 
         $headers = ['Content-Type: application/json'];

@@ -17,8 +17,12 @@ class Unsorted extends Entity
 
     /**
      * Unsorted constructor.
+     * @param $login
+     * @param $key
      */
-    public function __construct() {
+    public function __construct($login, $key) {
+        $this->login = $login; //логин
+        $this->key = $key; //ключ
         $this->method = ''; //метод запроса
         $this->url = ''; //url запроса
         $this->type = ''; //тип запроса
@@ -31,7 +35,7 @@ class Unsorted extends Entity
      */
     public function getList(){
         $this->method = 'GET';
-        $this->url = '/api/unsorted/list/';
+        $this->url = '/api/unsorted/list/?login='.$this->login.'&api_key='.$this->key;
         $this->type = 'list';
     }
 
@@ -40,7 +44,7 @@ class Unsorted extends Entity
      */
     public function getAllSummary(){
         $this->method = 'GET';
-        $this->url = '/api/unsorted/get_all_summary/';
+        $this->url = '/api/unsorted/get_all_summary/?login='.$this->login.'&api_key='.$this->key;
         $this->type = 'get_all_summary';
     }
 
@@ -49,7 +53,7 @@ class Unsorted extends Entity
      */
     public function accept(){
         $this->method = 'POST';
-        $this->url = '/api/unsorted/accept/';
+        $this->url = '/api/unsorted/accept/?login='.$this->login.'&api_key='.$this->key;
         $this->type = 'accept';
     }
 
@@ -58,7 +62,7 @@ class Unsorted extends Entity
      */
     public function decline(){
         $this->method = 'POST';
-        $this->url = '/api/unsorted/decline/';
+        $this->url = '/api/unsorted/decline/?login='.$this->login.'&api_key='.$this->key;
         $this->type = 'decline';
     }
 
@@ -67,7 +71,7 @@ class Unsorted extends Entity
      */
     public function add(){
         $this->method = 'POST';
-        $this->url = '/api/unsorted/add/';
+        $this->url = '/api/unsorted/add/?login='.$this->login.'&api_key='.$this->key;
         $this->type = 'add';
     }
 

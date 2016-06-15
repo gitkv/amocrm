@@ -56,11 +56,17 @@ class Request
         $this->url = 'v2/json/accounts/current';
     }
 
+    /**
+     * генератор GET запроса
+     */
     private function createGetRequest() {
         $this->url = 'v2/json/' . $this->object[0] . '/' . $this->object[1];
         $this->url .= (count($this->params) ? '?' . http_build_query($this->params) : '');
     }
 
+    /**
+     * генератор POST запроса
+     */
     private function createPostRequest() {
         if($this->type == 'auth'){
             $this->params = $this->object;

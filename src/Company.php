@@ -78,10 +78,10 @@ class Company extends Entity
 		return $this;
 	}
 
-    public function setCustomField($name, $value, $enum = false)
+    public function setCustomField($id, $value, $enum = false)
     {
         $field = [
-            'id' => $name,
+            'id' => $id,
             'values' => []
         ];
 

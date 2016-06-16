@@ -24,7 +24,6 @@ class Contact extends Entity
 	public function __construct(){
         $this->method = ''; //метод запроса
         $this->url = ''; //url запроса
-        $this->type = ''; //тип запроса
         $this->name = 'contacts'; //имя объекта запроса
         $this->data = []; //данные запроса
         $this->tags_array = []; //теги
@@ -36,7 +35,6 @@ class Contact extends Entity
     public function set(){
         $this->method = 'POST';
         $this->url = '/private/api/v2/json/contacts/set';
-        $this->type = 'add';
     }
 
     /**
@@ -45,7 +43,6 @@ class Contact extends Entity
     public function getList(){
         $this->method = 'GET';
         $this->url = '/private/api/v2/json/contacts/list';
-        $this->type = 'list';
     }
 
     /**
@@ -54,7 +51,6 @@ class Contact extends Entity
     public function getLinks(){
         $this->method = 'GET';
         $this->url = '/private/api/v2/json/contacts/links';
-        $this->type = 'links';
     }
 
 
@@ -89,7 +85,11 @@ class Contact extends Entity
 			$value = [$value];
 		}
 
-		$this->data['linked_leads_id'] = array_merge($this->linked_leads_id, $value);
+        if(!isset($this->data['linked_leads_id'])){
+            $this->data['linked_leads_id'] = [];
+        }
+
+		$this->data['linked_leads_id'] = array_merge($this->data['linked_leads_id'], $value);
 
 		return $this;
 	}

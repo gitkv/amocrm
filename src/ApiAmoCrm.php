@@ -17,6 +17,7 @@ class ApiAmoCrm
     public $config;
     public $result;
     public $last_insert_id;
+    public $last_insert_server_time;
 
     /**
      * ApiAmoCrm constructor.
@@ -146,14 +147,19 @@ class ApiAmoCrm
 
         $this->result = isset($this->result->response) ? $this->result->response : false;
 
-//        print '<pre> $request';
-//        print_r($request);
+        // id записи впри успешном запросе, иначе false
+        $lastId = false;
+        if($request->method == 'POST' && isset($this->result->{$request->name}->{$request->action}[0]->id)){
+            $lastId = $this->result->{$request->name}->{$request->action}[0]->id;
+        }
+        $this->last_insert_id = $lastId;
+        $this->last_insert_server_time = $this->result->server_time;
 
-        $this->last_insert_id =
-            ($request->method == 'POST' && isset($this->result->{$request->name}->{$request->type}[0]->id))?
-            $this->result->{$request->name}->{$request->type}[0]->id
-            :
-            false;
+        /*if($request->type=='request') {
+            print '<br>++++++++++++++++<br>';
+            print $request->name.'<br>last_insert_id <pre> ';
+            print_r($this->last_insert_id);
+        }*/
 
         return $this;
     }

@@ -28,7 +28,6 @@ class Request
         $this->url = $object->url;
         $this->type = $object->type;
         $this->name = $object->name;
-        $this->id = $object->id;
         $this->object = $object->data;
         
         switch ($object->method) {
@@ -41,19 +40,12 @@ class Request
         }
     }
 
-    public function setIfModifiedSince($if_modified_since)
-    {
+    public function setIfModifiedSince($if_modified_since) {
         $this->if_modified_since = $if_modified_since;
     }
 
-    public function getIfModifiedSince()
-    {
+    public function getIfModifiedSince() {
         return empty($this->if_modified_since) ? false : $this->if_modified_since;
-    }
-
-    private function createInfoRequest()
-    {
-        $this->url = 'v2/json/accounts/current';
     }
 
     /**
@@ -67,25 +59,27 @@ class Request
      * генератор POST запроса
      */
     private function createPostRequest() {
-        if($this->type == 'auth'){
-            $this->params = $this->object;
-        }
-        else {
-            if (!is_array($this->object)) {
-                $this->object = [$this->object];
-            }
+        
+        switch ($this->type){
+            case 'auth':
 
-            $object_name = $this->name;
-            $url_method_name = $this->url;
-            $id = $this->id;
+                $this->params = $this->object;
+                break;
 
-            $action = (isset($id)) ? 'update' : 'add';
-            $params = [];
-            $params['request'][$object_name][$action][] = $this->object;
+            case 'request':
 
-            $this->action = $action;
-            $this->url = $url_method_name;
-            $this->params = $params;
+                if (!is_array($this->object)) {
+                    $this->object = [$this->object];
+                }
+
+                $action = (isset($this->object['id'])) ? 'update' : 'add';
+                $params = [];
+                $params['request'][$this->name][$action][] = $this->object;
+
+                $this->action = $action;
+                $this->params = $params;
+                break;
+
         }
     }
 }

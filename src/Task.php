@@ -31,7 +31,6 @@ class Task extends Entity
     public function __construct() {
         $this->method = ''; //метод запроса
         $this->url = ''; //url запроса
-        $this->type = ''; //тип запроса
         $this->name = 'leads'; //имя объекта запроса
         $this->data = []; //данные запроса
     }
@@ -42,7 +41,6 @@ class Task extends Entity
     public function set(){
         $this->method = 'POST';
         $this->url = '/private/api/v2/json/leads/set';
-        $this->type = 'add';
     }
 
     /**
@@ -51,7 +49,6 @@ class Task extends Entity
     public function getList(){
         $this->method = 'GET';
         $this->url = '/private/api/v2/json/leads/list';
-        $this->type = 'list';
     }
 
     /**
@@ -60,7 +57,6 @@ class Task extends Entity
     public function getLinks(){
         $this->method = 'GET';
         $this->url = '/private/api/v2/json/contacts/links';
-        $this->type = 'list';
     }
 
 

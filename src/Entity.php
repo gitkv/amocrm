@@ -6,7 +6,7 @@ class Entity
 {
     public $method; //метод запроса (POST, GET...)
     public $url; //url запроса
-    public $type; //тип запроса (add, list, set...)
+    public $type = 'request'; //тип запроса (request || auth)
     public $name; //имя объекта запроса
     
     public $id; //id последнего запроса
@@ -21,8 +21,8 @@ class Entity
      */
     public function setUpdate($id, $last_modified)
     {
-        $this->id = $id;
-        $this->last_modified = $last_modified;
+        $this->data['id'] = $id;
+        $this->data['last_modified'] = $last_modified;
 
         return $this;
     }

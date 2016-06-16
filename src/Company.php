@@ -24,7 +24,6 @@ class Company extends Entity
 	{
         $this->method = ''; //метод запроса
         $this->url = ''; //url запроса
-        $this->type = ''; //тип запроса
         $this->name = 'contacts'; //имя объекта запроса
         $this->data = []; //данные запроса
         $this->tags_array = []; //теги
@@ -36,7 +35,6 @@ class Company extends Entity
     public function set(){
         $this->method = 'POST';
         $this->url = '/private/api/v2/json/company/set';
-        $this->type = 'add';
     }
 
     /**
@@ -45,7 +43,6 @@ class Company extends Entity
     public function getList(){
         $this->method = 'GET';
         $this->url = '/private/api/v2/json/company/list';
-        $this->type = 'list';
     }
 
 

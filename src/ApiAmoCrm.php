@@ -117,6 +117,44 @@ class ApiAmoCrm
 
         $this->result = json_decode($result);
 
+
+        /////////////////////////////////////////////////////////////////////////////
+        if($request->type !='auth') {
+
+            print '<h4>URL</h4>';
+            print '<b>'.$url.'</b>';
+
+            print '<h4>REQUEST</h4>';
+            print '<pre>';
+            print_r(json_encode($request->params));
+            print '</pre>';
+            print '<br>';
+
+            print '<h4>RESPONSE</h4>';
+            print '<pre>';
+            print_r($result);
+            print '</pre>';
+            print '<br>';
+
+            /*
+            print '<h4>INFO</h4>';
+            print '<pre>';
+            print_r($info);
+            print '</pre>';
+            print '<br>';
+
+            print '<h4>ERROR</h4>';
+            print '<pre>';
+            print_r($error);
+            print '</pre>';
+            print '<br>';
+            */
+
+
+            print '<br><br>======================================================================================================================================<br><br><br>';
+        }
+        /////////////////////////////////////////////////////////////////////////////
+
         
 
         if (floor($info['http_code'] / 100) >= 3) {

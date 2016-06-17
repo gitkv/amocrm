@@ -85,11 +85,6 @@ class ApiAmoCrm
     {
         $url = 'https://'.$this->domain.'.amocrm.ru'.$request->url;
 
-//        print $url;
-//        print '<pre>';
-//        print_r($request->params);
-//        die();
-
         $headers = ['Content-Type: application/json'];
         if ($date = $request->getIfModifiedSince()) {
             $headers[] = 'IF-MODIFIED-SINCE: ' . $date;
@@ -115,21 +110,25 @@ class ApiAmoCrm
         $error = curl_error($ch);
 
         curl_close($ch);
-
+        
         if ($error) {
             throw new \Exception($error);
         }
 
         $this->result = json_decode($result);
 
+        
+
         if (floor($info['http_code'] / 100) >= 3) {
             if (!$this->debug) {
-                $message = $this->result->response->error;
+                $message = $this->result->response->{$request->name}->{$request->action}->error;
             }
             else {
-                $error = (isset($this->result->response->error)) ? $this->result->response->error : '';
 
-                $error_code = (isset($this->result->response->error_code)) ? $this->result->response->error_code : '';
+
+                $error = (isset($this->result->response->{$request->name}->{$request->action}->error)) ? $this->result->response->{$request->name}->{$request->action}->error : '';
+
+                $error_code = (isset($this->result->response->{$request->name}->{$request->action}->error_code)) ? $this->result->response->{$request->name}->{$request->action}->error_code : '';
 
                 $description = ($error && $error_code && isset($this->errors->{$error_code})) ? $this->errors->{$error_code} : '';
 
@@ -137,6 +136,7 @@ class ApiAmoCrm
 
                 $message = json_encode([
                     'http_code' => $info['http_code'],
+                    'error_code' => $error_code,
                     'response' => $response,
                     'description' => $description
                 ], JSON_UNESCAPED_UNICODE);
@@ -154,12 +154,6 @@ class ApiAmoCrm
         }
         $this->last_insert_id = $lastId;
         $this->last_insert_server_time = $this->result->server_time;
-
-        /*if($request->type=='request') {
-            print '<br>++++++++++++++++<br>';
-            print $request->name.'<br>last_insert_id <pre> ';
-            print_r($this->last_insert_id);
-        }*/
 
         return $this;
     }

@@ -26,7 +26,15 @@ class Unsorted extends Entity
         $this->method = ''; //метод запроса
         $this->url = ''; //url запроса
         $this->name = 'unsorted'; //имя объекта запроса
+        $this->category = ''; //категория запроса (forms | mail | sip)
         $this->data = []; //данные запроса
+    }
+
+    /**
+     * запросы в неразовбранное работают только с авторизацией по GET параметрам
+     */
+    private function getAuthParams(){
+        $this->url .= '?login='.$this->login.'&api_key='.$this->key;
     }
 
     /**
@@ -34,7 +42,8 @@ class Unsorted extends Entity
      */
     public function getList(){
         $this->method = 'GET';
-        $this->url = '/api/unsorted/list/?login='.$this->login.'&api_key='.$this->key;
+        $this->url = '/api/unsorted/list';
+        $this->getAuthParams();
     }
 
     /**
@@ -42,7 +51,8 @@ class Unsorted extends Entity
      */
     public function getAllSummary(){
         $this->method = 'GET';
-        $this->url = '/api/unsorted/get_all_summary/?login='.$this->login.'&api_key='.$this->key;
+        $this->url = '/api/unsorted/get_all_summary';
+        $this->getAuthParams();
     }
 
     /**
@@ -50,7 +60,8 @@ class Unsorted extends Entity
      */
     public function accept(){
         $this->method = 'POST';
-        $this->url = '/api/unsorted/accept/?login='.$this->login.'&api_key='.$this->key;
+        $this->url = '/api/unsorted/accept';
+        $this->getAuthParams();
     }
 
     /**
@@ -58,7 +69,8 @@ class Unsorted extends Entity
      */
     public function decline(){
         $this->method = 'POST';
-        $this->url = '/api/unsorted/decline/?login='.$this->login.'&api_key='.$this->key;
+        $this->url = '/api/unsorted/decline';
+        $this->getAuthParams();
     }
 
     /**
@@ -66,13 +78,20 @@ class Unsorted extends Entity
      */
     public function add(){
         $this->method = 'POST';
-        $this->url = '/api/unsorted/add/?login='.$this->login.'&api_key='.$this->key;
+        $this->url = '/api/unsorted/add';
+        $this->getAuthParams();
     }
 
 
     /**
      * Установка параметров запроса
      */
+    
+    public function setCategory($category){
+        $this->category = $category;
+        
+        return $this;
+    }
 
     public function setSource($source) {
         $this->data['source'] = $source;
@@ -94,6 +113,12 @@ class Unsorted extends Entity
 
     public function setSourceData($source_data) {
         $this->data['source_data'] = $source_data;
+
+        return $this;
+    }
+
+    public function setData($data) {
+        $this->data['data'] = $data;
 
         return $this;
     }

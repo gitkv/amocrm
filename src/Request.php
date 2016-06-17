@@ -29,6 +29,7 @@ class Request
         $this->type = $object->type;
         $this->name = $object->name;
         $this->object = $object->data;
+        $this->category = $object->category;
         
         switch ($object->method) {
             case 'GET':
@@ -74,6 +75,9 @@ class Request
 
                 $action = (isset($this->object['id'])) ? 'update' : 'add';
                 $params = [];
+                if(!empty($this->category)){
+                    $params['request'][$this->name]['category'] = $this->category;
+                }
                 $params['request'][$this->name][$action][] = $this->object;
 
                 $this->action = $action;

@@ -11,6 +11,7 @@ class Entity
     
     public $id; //id последнего запроса
     public $last_modified; //дата последнего запроса
+    public $category; //категория запроса (для неразобранного) (forms | mail | sip)
     
     public $data; //данные запроса
 

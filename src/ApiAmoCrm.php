@@ -185,10 +185,15 @@ class ApiAmoCrm
 
         $this->result = isset($this->result->response) ? $this->result->response : false;
 
-        // id записи впри успешном запросе, иначе false
+        // id записи при успешном запросе, иначе false
         $lastId = false;
-        if($request->method == 'POST' && isset($this->result->{$request->name}->{$request->action}[0]->id)){
-            $lastId = $this->result->{$request->name}->{$request->action}[0]->id;
+        if(
+            $request->method == 'POST'
+            && is_array($this->result->{$request->name}->{$request->action})
+        ){
+            if(isset($this->result->{$request->name}->{$request->action}[0]->id)) {
+                $lastId = $this->result->{$request->name}->{$request->action}[0]->id;
+            }
         }
         $this->last_insert_id = $lastId;
         $this->last_insert_server_time = $this->result->server_time;
